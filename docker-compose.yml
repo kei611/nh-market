@@ -1,0 +1,16 @@
+# docker-composeで使用するバージョンを定義
+version: "3.9"
+
+# アプリケーションを動かすための各要素であるサービスの内容を記述
+services:
+  app: # "app"という名前でサービスを定義
+    build: # ComposeFileを実行し、ビルドされるときのpath
+      context: .
+      args:
+        - DEV=true
+    ports: # DBのDockerImageを立ち上げる際のポート番号
+      - "8000:8000"
+    volumes: #マウントする設定ファイルのパスを指定
+      - ./app:/app
+    command: > # サービスを使用するためのコマンド wait_for_dbでdbが立ち上がるのを待つ
+      sh -c "python manage.py runserver 0.0.0.0:8000"
